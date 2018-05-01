@@ -1,0 +1,61 @@
+# This Mixed Integer Linear Program (MILP) is an application of the lower bound technique disccused in Section 2 of the paper (arXiv:1801.06404) applied 
+# to the King grid. Also note that Section 3.1 details results on the King grid.
+
+# This function computes the distance between two vertices in the King grid
+def distance(a,b):
+    ans = max( abs(a[0] - b[0]), abs(a[1] - b[1]) )
+    return ans
+
+# The MILP for the King grid
+for n in range (3, 13, 2):
+    p = MixedIntegerLinearProgram(maximization=False, solver="GLPK");
+    x = p.new_variable(real=True, nonnegative=True)   
+    King = graphs.KingGraph([n,n]) # Generated the nxn king grid
+    K = King.vertices()
+    
+    A = zero_matrix(RR,n^2,n^2) # Creates the A matrix for LP
+    for i in range(n^2):
+        for j in range(n^2):
+            A[i, j] = (1/2)^ distance(K[i], K[j] ) 
+    
+    KingDist =  zero_matrix(RR,n^2,n^2) # Creates the distance matrix for King grid
+    for i in range(n^2):
+        for j in range(n^2):
+            KingDist[i,j] = distance(K[i],K[j])  
+    
+    b = [34]*n^2 # creates the b vector for King grid
+    for i in range(0,n^2):
+        if divmod(i,n)[1] != 0 and divmod(i,n)[1]!= n-1:   
+            b[i] = 1+ (1/2)^(KingDist[(n^2-1)/2, i] - 1)
+    
+    # Finds the inner vertices of King grid
+    list=[]
+    for i in range(n,n^2-n):
+        if divmod(i,n)[1] != 0 and divmod(i,n)[1]!= n-1:   
+            list = list + [i]
+    #make the matrix using only the rows that are inner vertices        
+    c =A.matrix_from_rows(list) 
+    sum=0
+    
+    one_vec = [1]*n^2    
+    # Adds in the constraint that 1<= Ax 
+    p.add_constraint(A*x >= one_vec) 
+    # Adds the constraint that the weight of the middle vertex is 2
+    p.add_constraint(x[(n^2-1)/2] == 2)           
+   # Adds in the constraint that Ax <= b
+    p.add_constraint(A*x <= b)  
+    
+    for i in range(len(list)):
+        p.set_integer(x[list[i]])
+       # Adds in constraint that inner vertices have weight 0 or 2     
+        p.add_constraint(x[list[i]] <= 2) 
+    
+    # Sets the objective function
+    for i in range(c.nrows()):
+        for j in range(c.ncols()):
+            sum = sum + c[i][j]*x[j]      
+    
+    # Computes the minimum exponential dominating number
+    p.set_objective(sum)
+    ans = 34 + (n-2)^2 - p.solve();
+    print n, ans
