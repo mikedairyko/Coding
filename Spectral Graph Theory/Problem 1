@@ -1,3 +1,8 @@
+# Problem: Find two connected graphs G and H so that the set of eigenvalues ignoring multi-plicity are equal, but 
+# the multiplicities of the eigenvalues disagree in at least one case. Repeat this for the Laplacian, the 
+# signless Laplacian, and the normalized Laplacian.
+# ----------------------------------------------------------------------------------------------------------------
+
 # Adjacency Matrix
 Graphs = {}
 list = []
