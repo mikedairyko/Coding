@@ -1,0 +1,89 @@
+# Adjacency Matrix
+Graphs = {}
+list = []
+n = 7
+for g in graphs.nauty_geng(str(n)+ ' -c'):
+    q = g.adjacency_matrix().minpoly()
+    if not q in Graphs:
+        Graphs[q] = [g.graph6_string()]
+    else:
+        Graphs[q].append(g.graph6_string()) 
+for d in Graphs:
+    if len(Graphs[d])>1:
+        for i in range( len(Graphs[d]) -1 ):
+            if Graph(Graphs[d][i]).characteristic_polynomial() != Graph(Graphs[d][i+1]).characteristic_polynomial():  
+                list.append( (Graphs[d][i] , Graphs[d][i+1]) )	         
+for X in list[0]:
+    Graph(X).show()
+    Graph(X).is_connected()
+    Graph(X).adjacency_matrix().charpoly()
+    Graph(X).adjacency_matrix().minpoly()
+    
+# Laplacian 
+Graphs = {}
+list = []
+n = 7
+for g in graphs.nauty_geng(str(n)+ ' -c'):
+    q = g.laplacian_matrix().minpoly()
+    if not q in Graphs:
+        Graphs[q] = [g.graph6_string()]
+    else:
+        Graphs[q].append(g.graph6_string()) 
+for d in Graphs:
+    if len(Graphs[d])>1:
+        for i in range( len(Graphs[d]) -1 ):
+           if Graph(Graphs[d][i]).laplacian_matrix().charpoly() != Graph(Graphs[d][i+1]).laplacian_matrix().charpoly():  
+                list.append( (Graphs[d][i] , Graphs[d][i+1]))             
+for X in list[0]:
+    Graph(X).show()
+    Graph(X).is_connected()
+    Graph(X).laplacian_matrix().charpoly()
+    Graph(X).laplacian_matrix().minpoly()
+    
+# Signless Laplacian 
+Graphs = {}
+list = []
+n = 6
+for g in graphs.nauty_geng(str(n)+ ' -c'):
+    deg = g.degree()
+    L = diagonal_matrix(deg) + g.adjacency_matrix()
+    q = L.minpoly()
+    if not q in Graphs:
+        Graphs[q] = [g.graph6_string()]
+    else:
+        Graphs[q].append(g.graph6_string()) 
+for d in Graphs:
+    if len(Graphs[d])>1:
+        for i in range( len(Graphs[d]) -1 ):
+           deg1 = Graph(Graphs[d][i]).degree()
+           deg2 = Graph(Graphs[d][i+1]).degree()
+           L1 = diagonal_matrix(deg1) + Graph(Graphs[d][i]).adjacency_matrix()
+           L2 = diagonal_matrix(deg2) + Graph(Graphs[d][i+1]).adjacency_matrix()
+           if L1.charpoly() != L2.charpoly():  
+                list.append( (Graphs[d][i] , Graphs[d][i+1]) )
+for X in list[0]:
+    Graph(X).show()
+    Graph(X).is_connected()
+    (diagonal_matrix(Graph(X).degree()) + Graph(X).adjacency_matrix()).charpoly()
+    (diagonal_matrix(Graph(X).degree()) + Graph(X).adjacency_matrix()).minpoly()    
+    
+# Normalized Laplacian
+Graphs = {}
+list = []
+for n in range(4,6):
+    for g in graphs.nauty_geng(str(n)+ ' -c'):
+        q = g.laplacian_matrix(normalized=True).minpoly()
+        if not q in Graphs:
+            Graphs[q] = [g.graph6_string()]
+        else:
+            Graphs[q].append(g.graph6_string()) 
+    for d in Graphs:
+        if len(Graphs[d])>1:
+            for i in range( len(Graphs[d]) -1 ):
+               if Graph(Graphs[d][i]).laplacian_matrix(normalized=True).charpoly() !=Graph(Graphs[d][i+1]).laplacian_matrix(normalized=True).charpoly():  
+                    list.append( (Graphs[d][i] , Graphs[d][i+1]) )
+for X in list[0]:
+    Graph(X).show()
+    Graph(X).is_connected()
+    Graph(X).laplacian_matrix(normalized=True).charpoly()
+    Graph(X).laplacian_matrix(normalized=True).minpoly()    
