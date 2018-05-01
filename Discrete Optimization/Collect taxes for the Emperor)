@@ -1,0 +1,117 @@
+# Problem: The Emperor has decided to build Death Star II. He needs money to pay for it. He sent you to collect taxes
+# from several planets. Here are the coordinates of the planets assigned to you. You are starting at Corusant (0,0) and 
+# want to return there. The time of travel between the planets corresponds to theirEuclidean distance. You have to visit 
+# all planets. Minimize the travel time.
+
+X = [  [0,0], [9,0], [1,1], [8,1], [0,2], [9,2], [4,3], [5,3], \
+[0,4], [1,4], [2,4], [3,4], [6,4], [7,4], [8,4], [9,4], \
+[0,5], [1,5], [3,5], [2,5], [6,5], [7,5], [8,5], [9,5], \
+[4,6], [5,6], [0,7], [9,7], [1,8], [8,8], [0,9], [9,9] ];
+
+# Provide approximate solution and provide also a lower bound. Create map of your trip (means 2Dplot). 
+# The bounds do not have to be perfect, but they must be at least a bit reasonable.
+
+#----------------------------------------------------------------------------------------------------
+# The best way to minimize the travel time is to use thetraveling salesman algorithm. Specifically we use the nearest 
+# neighbor heuristic to find an approximate solution:
+
+vertices = [  [0,0], [9,0], [1,1], [8,1], [0,2], [9,2], [4,3], [5,3], \
+[0,4], [1,4], [2,4], [3,4], [6,4], [7,4], [8,4], [9,4], \
+[0,5], [1,5], [3,5], [2,5], [6,5], [7,5], [8,5], [9,5], \
+[4,6], [5,6], [0,7], [9,7], [1,8], [8,8], [0,9], [9,9] ];
+
+path = [ vertices[0] ];
+n = len(vertices);
+total_dist = 0;
+for i in range(n-1):
+    min_dist = +infinity
+    next_vertex = None
+    for z in vertices:
+        last_vertex = path[ len(path) - 1]
+        if z in path:
+            continue
+        distance = (last_vertex[0] - z[0])^2 + (last_vertex[1] - z[1] )^2 
+        if distance < min_dist:
+            min_dist = distance
+            next_vertex = z 
+    total_dist = total_dist + float(min_dist)              
+    path.append(next_vertex)            
+path.append(path[0])  
+print total_dist
+
+m = len(path)
+edges = []
+
+for i in range(m -1):
+    edges = edges + [[ path[i], path[i+1]] ]
+
+drawing =  line([])
+for x in vertices:
+    drawing = drawing + disk(x, 0.1, (0,2*pi), color='red')
+for i in range(len(edges)):
+    drawing = drawing + line( [edges[i][0] , edges[i][1] ])
+drawing.show()
+
+
+#----------------------------------------------------------------------------------------------------
+
+# We use one step in the Held Karp Algorithm to find a reasonable lower bound:
+
+def plot_vertices_edges(vertices, edges):
+    drawing =  line([])
+    for x in vertices:
+        drawing = drawing + disk(x, 0.1, (0,2*pi), color='red')
+    for e in edges:
+        drawing =  drawing + line([vertices[e[0]], vertices[e[1]]])
+    drawing.show()
+
+vertices = [  [0,0], [9,0], [1,1], [8,1], [0,2], [9,2], [4,3], [5,3], \
+[0,4], [1,4], [2,4], [3,4], [6,4], [7,4], [8,4], [9,4], \
+[0,5], [1,5], [3,5], [2,5], [6,5], [7,5], [8,5], [9,5], \
+[4,6], [5,6], [0,7], [9,7], [1,8], [8,8], [0,9] ]; # deleted vertex [9,9]
+       
+n = len(vertices)
+edges_in_tree = []
+vertex_components = range(n)
+totaltree_dist = 0;
+
+edges = []
+for i in range(n):
+    for j in range(i+1,n):
+        distance = sqrt((vertices[i][0]-vertices[j][0])**2 + (vertices[i][1]-vertices[j][1])**2    )
+        edges.append([i,j, distance])
+
+for i in range(len(edges)):
+    for j in range(len(edges)-1):
+        if edges[j][2] > edges[j+1][2]:
+            tmp = edges[j]
+            edges[j] = edges[j+1]
+            edges[j+1] = tmp    
+
+for e in edges:
+    u = e[0]
+    v = e[1]
+    d = e[2]
+    if vertex_components[u] != vertex_components[v]:
+        old_component = vertex_components[v]
+        for x in range(n):
+            if vertex_components[x] == old_component:
+                vertex_components[x] = vertex_components[u]
+        totaltree_dist =  totaltree_dist + float(d)
+        edges_in_tree.append([u,v])
+
+print totaltree_dist
+plot_vertices_edges(vertices, edges_in_tree)
+
+#----------------------------------------------------------------------------------------------------
+
+total_dist = totaltree_dist;
+min_dist = +infinity
+last_vertex = [9,9]
+for z in vertices:
+    distance = (last_vertex[0] - z[0])^2 + (last_vertex[1] - z[1] )^2 
+    if distance < min_dist:
+        min_dist = distance
+        next_vertex = z 
+total_dist = total_dist + float(min_dist)
+print total_dist
