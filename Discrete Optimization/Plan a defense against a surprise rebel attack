@@ -1,0 +1,37 @@
+# Problem: You are leading a group 4 of imperial fighters that are protecting an imperial shuttle transporting secret 
+# plans to Death Star II. You were ambushed by 3 rebel ships. You must protect the secret plans! Do not repeat the same 
+# mistake that happened with Death Star.
+
+# Choose one fighter from your group to accompany the transport shuttle cover their retreat by fight-ing the rebel ship.  
+# The remaining three ships will each try to fight one rebel ship. You need to fightagainst each of the rebel ships to 
+# prevent pursuit of the transport shuttle and you do not want to leavethe transport ship unguarded.
+
+# For the remaining 3 ships that fight the rebel ships, maximize the total damage (sum of damages) caused to the rebel ships.
+# For every pair of imperial and rebel ship, the damage caused by imperialships to rebel ships is described in the following 
+# table.
+
+#               r1  r2  r3
+#         i1    3   2   3
+#         i2    2   3   1
+#         i3    4   2   2
+#         i4    1   5   1
+
+#--------------------------------------------------------------------------------------------------------
+
+p = MixedIntegerLinearProgram(maximization=True, solver="GLPK")
+x = p.new_variable(integer=True, nonnegative=True)
+
+p.add_constraint(3*x[1]+ 2*x[2]+ 4*x[3] + x[4] >= x[13])
+p.add_constraint(2*x[5]+ 3*x[6]+ 2*x[7] + 5*x[8] >= x[14])
+p.add_constraint(3*x[9]+ x[10]+ 2*x[11] + x[12] >= x[15])
+
+p.add_constraint(x[1] + x[2] + x[3] + x[4] <= 1)
+p.add_constraint(x[5] + x[6] + x[7] + x[8] <= 1)
+p.add_constraint(x[9] + x[10] + x[11] + x[12] <= 1)
+
+p.add_constraint(x[1] + x[2] + x[3] + x[4] + x[5] + x[6] + x[7] + x[8] + x[9] + x[10] + x[11] + x[12] == 3 )
+
+p.set_objective(x[13]+x[14]+x[15])       
+
+p.solve()
+p.get_values(x)
