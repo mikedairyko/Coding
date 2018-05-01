@@ -1,0 +1,24 @@
+# This integer program computes the porous exponential domination number of the Slant grid
+# for small values of n
+
+for n in range(2,11):
+    Slant = SlantGrid(n)
+    Sverts = Slant.vertices()
+    
+# This matrix represents the weight that 
+# vertex i sends to vertex j in the Slant grid    
+    A = zero_matrix(QQ,n^2,n^2)      
+    for i in range(n^2):
+        for j in range(n^2):
+            A[i, j] = (1/2)^(Slant.distance(Sverts[i], Sverts[j] ) -1)
+# Constructs integer program                   
+    p = MixedIntegerLinearProgram(maximization=False, solver="GLPK");
+    x = p.new_variable(integer=True, nonnegative=True)
+    s = 0
+    for i in range(n^2):
+        p.add_constraint(x[i] <= 1)    
+        s = s + x[i]   
+    
+    p.set_objective(s) 
+    p.add_constraint(A*x >= 1)   
+    print n, p.solve()
