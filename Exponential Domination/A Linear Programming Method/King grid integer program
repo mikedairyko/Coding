@@ -1,0 +1,26 @@
+# This integer program computes the porous exponential domination number of the nxn King grid
+# for small values of n
+
+for n in range(1,11):
+    G = graphs.KingGraph( [n,n] ) # Sets up King grid
+    KingDist = G.distance_matrix() # King grid distance matrix
+    m = KingDist.nrows()
+    
+    # This matrix represents the weight that 
+    # vertex i sends to vertex j in the King grid
+    K = matrix(QQ, m,m, lambda i, j: (1/2)^(KingDist[i][j]-1)) 
+    
+    # Sets up the MILP
+    p = MixedIntegerLinearProgram(maximization=False, solver="GLPK");
+    x = p.new_variable(integer=True, nonnegative=True)
+    
+    # creates the objective function 
+    s = 0
+    for i in range(m):
+        p.add_constraint(x[i] <= 1)    
+        s = s + x[i]   
+    
+    p.set_objective(s) 
+    p.add_constraint(K*x >= 1)   
+    print n, p.solve()
+    
