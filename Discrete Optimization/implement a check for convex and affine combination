@@ -1,5 +1,17 @@
-# Problem: Implement functions that will compute if x is a convex/affine combination of points
+# Problem:
+#  Implement functions that will compute if x is a convex/affine combination of points
 #  Make the function such that it will compute in any number of dimensions
+# Notes:
+#  - The functions should produce the convex/affine combination or write that
+#    combination is not possible. It is fine to use print to write the output
+#  - There are few test problems, that you should use to test your programs
+#  - There is a function draw_question_convex which will plot the problem - you
+#    can use it to test to check if your solution is correct
+#  - You may use MixedIntegerLinearProgram for finding the combination
+#  - You can use construction try: and except: when solving the linear
+#    program and detecting that it has no solution   
+#  - If you try to plot 3D problem, you need to install Java and it is a bit
+#    troublesome to allow Java in web browser to work
 
 
 # This is a small function that draws points by converting them to
