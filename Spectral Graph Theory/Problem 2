@@ -1,0 +1,67 @@
+# Problem:
+# The distance matrix is not defined for graphs which are not connected because the distance between vertices in distinct
+# components is infinity. We can solve this by creating a new 'flipped' distance matrix F as follows:
+                   
+#                     F =   {    1/d(u,v) if u \neq v are in the same component
+#                           {    0        else
+                    
+# note that d(u,v) denotes the length shortest path from u to v
+
+# A) Show that F cannot detect the number of components or the number of edges by producing cospectral graphs which differ in these parameters
+#    (there exist graphs which establish both).
+    
+# B) Find the eigenvalues for F for the 3-dimensional and 4-dimensional hypercube
+# ---------------------------------------------------------------------------------------------------------------------
+
+# A) 
+#This function computes the F distance matrix of a graph g
+def FlipdistA(g):
+       A = g.adjacency_matrix().change_ring(QQ)
+       for i in range(g.order()):
+           for j in range(g.order()):
+               if j!=i:
+                   A[i,j] = 1/g.distance(i,j)
+               if j==i:
+                   A[i,j] = 0
+       return A
+# Here we search for cospectral graphs where the number of components differs from the number of edges        
+data = {}
+n = 7
+for g in graphs.nauty_geng(str(n)):
+    q = FlipdistA(g).characteristic_polynomial()
+    if not q in data:
+        data[q] = [g.graph6_string()]
+    else:
+        data[q].append(g.graph6_string()) 
+for d in data:
+    if len(data[d])>1:
+        print data[d], [Graph(x).is_connected() for x in data[d]],[Graph(x).size() for x in data[d]]
+for X in ['FCOfw', 'FCR]w']:
+    G = Graph(X).show()        
+  
+# B)
+# 3-dimensional hypercube:
+Q = graphs.CubeGraph(3)
+A = Q.adjacency_matrix().change_ring(QQ)
+[m,n] = A.dimensions()
+M = matrix(m,n).change_ring(QQ)
+V = Q.vertices()
+for j in range(m):
+    for k in range(n):
+        if V[j] != V[k]:
+            d = Q.distance( V[j] , V[k] )
+            M[j,k] = 1/d
+M.eigenvalues()  
+
+# 4-dimensional hypercube:
+Q = graphs.CubeGraph(4)
+A = Q.adjacency_matrix().change_ring(QQ)
+[m,n] = A.dimensions()
+M = matrix(m,n).change_ring(QQ)
+V = Q.vertices()
+for j in range(m):
+    for k in range(n):
+        if V[j] != V[k]:
+            d = Q.distance( V[j] , V[k] )
+            M[j,k] = 1/d
+M.eigenvalues()  
