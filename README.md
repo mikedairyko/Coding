@@ -8,6 +8,6 @@ This repository contains various projects that I have completed in Matlab, SageM
 
 *Exponential Domination/A Linear Programming Method:* Contains SageMath files related to my thesis work. For further details, see A linear programming method for exponential domination [https://arxiv.org/abs/1801.06404].
 
-*Machine Learning* contains Matlab files related to classification.
+*Machine Learning* contains Matlab and Python files related to classification and regression.
 
 *Spectral Graph Theory* contains SageMath files on projects that I completed within the area of Spectral Graph Theory.
