@@ -12,8 +12,8 @@
 
 % Goal: Find a suitable classifier that predicts gamma particles (signal).
 % Can we beat the 86.6% mean accuracy on the test data?
-%-------------------------------------------------------------------------------------------------------
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Load the data and separate features from classification
 gamma = readtable('magic04.data.txt');
 X = table2array(gamma(:, 1:10));
@@ -94,7 +94,9 @@ S = sprintf( 'LDA:%0.2f%%; QDA:%0.2f%%; Naive Bayes: %0.2f%%; SVM:%0.2f%%; KNN:%
 
 disp(S);
 
-% LDA:78.50%; QDA:78.48%; Naive Bayes: 72.78%; SVM:86.51%; KNN:83.81%;
-% Therefore SVM has the best accuracy 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The results give the following accuracy: LDA:78.50%; QDA:78.48%; Naive Bayes: 72.78%; SVM:86.51%; KNN:83.81%;
+% Therefore SVM has the best accuracy! 
 
 
