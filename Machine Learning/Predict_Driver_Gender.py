@@ -1,6 +1,6 @@
 ############# OVERVIEW OF THE DATASET #########################
 # The Stanford Open Policing Project data
-# This dataset comes from: https://openpolicing.stanford.edu/data/
+# Get the dataset: Colorado from https://openpolicing.stanford.edu/data/, 
 # and more information on data: https://github.com/5harad/openpolicing/blob/master/DATA-README.md
 
 # Data represents the traffic stops in the state of Colorado from January 2010 to February 2017.
